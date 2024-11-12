@@ -171,10 +171,10 @@
     <div id="grid" class="grid-container"></div>
 
     <!-- Modal Section -->
-    <div id="modal" class="modal">
+    <div id="modal" class="modal show"> <!-- Keep modal visible -->
         <span class="close-button" onclick="closeModal()">&times;</span>
         <div class="modal-content">
-            <p id="modal-text"></p>
+            <p id="modal-text">Hover over a cat image to see details</p>
             <div id="modal-info" class="modal-info"></div>
         </div>
     </div>
@@ -241,8 +241,8 @@
             const factData = await factResponse.json();
             const catFact = factData.fact;
 
-            // Add click event to show the modal with cat fact, ID, and date
-            gridItem.addEventListener('click', () => {
+            // Add hover event to show the modal with cat fact, ID, and date
+            gridItem.addEventListener('mouseover', () => {
                 showModal(catFact, item.id, item.created_at);
             });
 
@@ -252,34 +252,22 @@
 
     // Show the modal with the given text, ID, and upload date
     function showModal(text, id, date) {
-        const modal = document.getElementById('modal');
         const modalText = document.getElementById('modal-text');
         const modalInfo = document.getElementById('modal-info');
-        const grid = document.getElementById('grid');
 
         modalText.textContent = text;
         modalInfo.innerHTML = `ID: ${id} <br> Upload Date: ${date ? new Date(date).toLocaleDateString() : 'N/A'}`;
-        
-        modal.classList.add('show');
-        grid.style.width = '50%';
     }
 
-    // Close the modal and reset layout
+    // Close modal (optional function if you want to hide the modal)
     function closeModal() {
         const modal = document.getElementById('modal');
-        const grid = document.getElementById('grid');
-
         modal.classList.remove('show');
-        grid.style.width = '100%';
     }
 
     // Initial fetch and render of the data
     fetchData();
-
-    // Show modal window on page load
-    window.onload = () => {
-        showModal('Select a Person', 'N/A', null);
-    };
 </script>
 
-  </body>
+</body>
+</html>
