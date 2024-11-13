@@ -1,450 +1,453 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Ajay Demo</title>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ajay Demo</title>
 
-        <!-- Google Fonts: Montserrat -->
-        <link
-            href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap"
-            rel="stylesheet"
-        />
+    <!-- Google Fonts: San Francisco -->
+    <link href="https://fonts.googleapis.com/css2?family=San+Francisco:wght@400;500;700&display=swap" rel="stylesheet" />
 
-        <style>
-          
+    <!-- jQuery and jQuery UI CSS -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
 
-            /* Basic Reset */
-            * {
-                box-sizing: border-box;
-                margin: 0;
-                padding: 0;
-                font-family: "Montserrat", sans-serif;
-            }
+    <style>
+        /* Basic Reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: "San Francisco", sans-serif;
+        }
 
-            /* Container for Split-Screen Layout */
+        body {
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            height: 100vh;
+        }
+
+        .menu-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f5f5f7;
+            padding: 10px 20px;
+            color: black;
+        }
+
+        .menu-bar .menu-icon {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: black;
+        }
+
+        .menu-bar .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: black;
+        }
+
+        .menu-bar .menu-options {
+            display: flex;
+            gap: 20px;
+        }
+
+        .menu-bar .menu-options a {
+            color: black;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s;
+        }
+
+        .menu-bar .menu-options a:hover {
+            color: #555;
+        }
+
+        .sort-container {
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .sort-container select {
+            padding: 8px 12px;
+            font-size: 1rem;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            outline: none;
+            background-color: #fff;
+            color: #1d1d1f;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 10px;
+            width: 50%;
+            padding: 20px;
+            overflow: auto;
+            transition: width 0.3s ease;
+        }
+
+        .grid-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            height: 120px;
+            background-color: #fff;
+        }
+
+        .grid-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .grid-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .grid-item .overlay-text {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: 5px;
+            opacity: 0;
+            border-radius: 12px;
+            transition: opacity 0.3s ease;
+            text-align: center;
+        }
+
+        .grid-item:hover .overlay-text {
+            opacity: 1;
+        }
+
+        .modal {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 50%;
+            background-color: #f9f9f9;
+            color: black;
+            padding: 40px;
+            transition: width 0.3s ease;
+            box-shadow: -4px 0 10px rgba(0, 0, 0, 0.2);
+            resize: both;
+            overflow: auto;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 80%;
+            text-align: center;
+        }
+
+        .modal-content p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: black;
+            margin: 15px 0;
+        }
+
+        .modal-info {
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .close-button {
+            align-self: flex-end;
+            font-size: 1.5rem;
+            color: black;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: color 0.3s;
+        }
+
+        .close-button:hover {
+            color: #555;
+        }
+
+        .popup {
+            display: none;
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .popup p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: black;
+        }
+
+        #open-modal-button {
+            display: none;
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 8px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #open-modal-button:hover {
+            background-color: #0056b3;
+        }
+
+        @media (max-width: 768px) {
             .container {
-                display: flex;
-                flex-direction: row;
-                width: 100%;
-                height: 100vh;
-            }
-
-            /* Sort Dropdown */
-            .sort-container {
-                width: 100%;
-                padding: 20px;
-                text-align: center;
-            }
-
-            .sort-container select {
-                padding: 8px 12px;
-                font-size: 1rem;
-                border-radius: 8px;
-                border: 1px solid #ddd;
-                outline: none;
-            }
-
-            /* Grid Section (Left Half) */
-            .grid-container {
-                display: grid;
-                grid-template-columns: repeat(10, 1fr);
-                gap: 5px;
-                width: 50%;
-                padding: 20px;
-                overflow: auto;
-                transition: width 0.3s ease;
-            }
-
-            /* Grid Item */
-            .grid-item {
-                position: relative;
-                overflow: hidden;
-                border-radius: 12px;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                cursor: pointer;
-                height: 120px;
-            }
-
-            /* Image Styling */
-            .grid-item img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                border-radius: 12px;
-                transition: transform 0.3s ease;
-            }
-
-            /* Hover Zoom Effect */
-            .grid-item:hover img {
-                transform: scale(1.05);
-            }
-
-            /* Hover Overlay */
-            .grid-item .overlay-text {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: rgba(0, 0, 0, 0.5);
-                color: white;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 0.85rem;
-                font-weight: 500;
-                padding: 5px;
-                opacity: 0;
-                border-radius: 12px;
-                transition: opacity 0.3s ease;
-                text-align: center;
-            }
-
-            /* Show overlay on hover */
-            .grid-item:hover .overlay-text {
-                opacity: 1;
-            }
-
-            /* Modal Section (Right Half) */
-            .modal {
-                display: none;
                 flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                width: 50%;
-                background-color: #f9f9f9;
-                color: black;
-                padding: 40px;
-                transition: width 0.3s ease;
-                box-shadow: -4px 0 10px rgba(0, 0, 0, 0.2);
-                resize: both; /* Allow resizing */
-                overflow: auto; /* Ensure content is scrollable */
-                position: relative; /* Add relative positioning */
-                background-size: cover; /* Ensure background image covers the modal */
-                background-position: center; /* Center the background image */
             }
 
-            .modal.show {
-                display: flex;
+            .grid-container {
+                width: 100%;
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .modal {
+                width: 100%;
+                box-shadow: none;
             }
 
             .modal-content {
-                background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
-                padding: 30px;
-                border-radius: 12px;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-                max-width: 500px;
-                width: 80%;
-                text-align: center;
+                width: 90%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .grid-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .sort-container select {
+                width: 100%;
+                font-size: 0.9rem;
             }
 
             .modal-content p {
-                font-size: 1.1rem;
-                line-height: 1.6;
-                color: black;
-                margin: 15px 0;
+                font-size: 1rem;
             }
 
             .modal-info {
-                font-size: 0.9rem;
-                color: #555;
+                font-size: 0.8rem;
             }
-
-            /* Close Button */
-            .close-button {
-                align-self: flex-end;
-                font-size: 1.5rem;
-                color: black;
-                cursor: pointer;
-                margin-bottom: 20px;
-                transition: color 0.3s;
-            }
-
-            .close-button:hover {
-                color: #555;
-            }
-
-            /* Popup styling */
-            .popup {
-                display: none;
-                position: absolute;
-                background-color: white;
-                border: 1px solid #ddd;
-                padding: 10px;
-                border-radius: 8px;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-                z-index: 1000;
-                pointer-events: none;
-            }
-
-            .popup p {
-                margin: 0;
-                font-size: 0.9rem;
-                color: black;
-            }
-
-            /* Open Modal Button */
-            #open-modal-button {
-                display: none; /* Initially hidden */
-                position: absolute;
-                bottom: 20px;
-                right: 20px;
-                padding: 10px 20px;
-                font-size: 1rem;
-                border: none;
-                border-radius: 8px;
-                background-color: #007bff;
-                color: white;
-                cursor: pointer;
-                transition: background-color 0.3s;
-            }
-
-            #open-modal-button:hover {
-                background-color: #0056b3;
-            }
-
-            /* Media Queries for Mobile Responsiveness */
-            @media (max-width: 768px) {
-                .container {
-                    flex-direction: column;
-                }
-
-                .grid-container {
-                    width: 100%;
-                    grid-template-columns: repeat(2, 1fr);
-                }
-
-                .modal {
-                    width: 100%;
-                    box-shadow: none;
-                }
-
-                .modal-content {
-                    width: 90%;
-                }
-            }
-
-            @media (max-width: 480px) {
-                .grid-container {
-                    grid-template-columns: repeat(2, 1fr);
-                }
-
-                .sort-container select {
-                    width: 100%;
-                    font-size: 0.9rem;
-                }
-
-                .modal-content p {
-                    font-size: 1rem;
-                }
-
-                .modal-info {
-                    font-size: 0.8rem;
-                }
-            }
-        </style>
-    </head>
-    <body>
-        <div class="sort-container">
-            <label for="sort-options">Sort by: </label>
-            <select id="sort-options" onchange="fetchData()">
-                <option value="id">ID (Ascending)</option>
-                <option value="date">Upload Date</option>
-                <option value="reverse-id">ID (Descending)</option>
-                <option value="breed">Breed</option>
-                <!-- New option for sorting by breed -->
-            </select>
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-bar">
+        <span class="logo">LOGO</span>
+        <span class="menu-icon">&#9776;</span>
+        <div class="menu-options">
+            <a href="#">Home</a>
+            <a href="#">About</a>
+            <a href="#">Contact</a>
         </div>
+    </div>
 
-        <div class="container">
-            <!-- Grid Container -->
-            <div id="grid" class="grid-container"></div>
+    <div class="sort-container">
+        <label for="sort-options">Sort by: </label>
+        <select id="sort-options" onchange="fetchData()">
+            <option value="id">ID (Ascending)</option>
+            <option value="date">Upload Date</option>
+            <option value="reverse-id">ID (Descending)</option>
+            <option value="breed">Breed</option>
+        </select>
+    </div>
 
-            <!-- Modal Section -->
-            <div id="modal" class="modal show">
-                <!-- Keep modal visible -->
-                <span class="close-button" onclick="closeModal()">&times;</span>
-                <div class="modal-content">
-                    <p id="modal-text">Hover over a cat image to see details</p>
-                    <div id="modal-info" class="modal-info"></div>
-                </div>
+    <div class="container">
+        <div id="grid" class="grid-container"></div>
+
+        <div id="modal" class="modal show">
+            <span class="close-button" onclick="closeModal()">&times;</span>
+            <div class="modal-content">
+                <p id="modal-text">Hover over a cat image to see details</p>
+                <div id="modal-info" class="modal-info"></div>
             </div>
-            <!-- Button to reopen modal -->
-            <button id="open-modal-button" onclick="openModal()">Open Modal</button>
         </div>
+        <button id="open-modal-button" onclick="openModal()">Open Modal</button>
+    </div>
 
-        <!-- Popup -->
-        <div id="popup" class="popup">
-            <p id="popup-text"></p>
-            <div id="popup-info"></div>
-        </div>
+    <div id="popup" class="popup">
+        <p id="popup-text"></p>
+        <div id="popup-info"></div>
+    </div>
 
-        <script>
-            const CAT_API_KEY =
-                "live_LQKKqXjCiw23JCnjhzF3vX3RLC2L1CEA9ldkoVpcKOG8W654aI08avEHD2VqfeOo";
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 
-            // Fetch data and populate the grid
-            async function fetchData() {
-                try {
-                    const sortOption = document.getElementById("sort-options").value;
+    <script>
+        const CAT_API_KEY = "live_LQKKqXjCiw23JCnjhzF3vX3RLC2L1CEA9ldkoVpcKOG8W654aI08avEHD2VqfeOo";
 
-                    // Fetch 100 cat images for a 10x10 grid
-                    const response = await fetch(
-                        `https://api.thecatapi.com/v1/images/search?limit=100&order=${
-                            sortOption === "reverse-id" ? "desc" : "asc"
-                        }&include_breeds=true`,
-                        {
-                            headers: {
-                                "x-api-key": CAT_API_KEY,
-                            },
-                        }
-                    );
-                    let data = await response.json();
-
-                    // Sort data based on the selected option
-                    if (sortOption === "id") {
-                        data.sort((a, b) => a.id - b.id); // Ascending by ID
-                    } else if (sortOption === "reverse-id") {
-                        data.sort((a, b) => b.id - a.id); // Descending by ID
-                    } else if (sortOption === "date") {
-                        data.sort(
-                            (a, b) => new Date(a.created_at) - new Date(b.created_at)
-                        ); // Sort by upload date
-                    } else if (sortOption === "breed") {
-                        data.sort((a, b) => {
-                            const breedA = a.breeds[0]?.name || "";
-                            const breedB = b.breeds[0]?.name || "";
-                            return breedA.localeCompare(breedB);
-                        }); // Sort by breed name
-                    }
-
-                    renderGrid(data, sortOption);
-                } catch (error) {
-                    console.error("Error fetching data:", error);
-                }
-            }
-
-            // Render the grid with the sorted data
-            function renderGrid(data, sortOption) {
-                const grid = document.getElementById("grid");
-                grid.innerHTML = ""; // Clear the grid before rendering
-
-                data.forEach(async (item) => {
-                    const gridItem = document.createElement("div");
-                    gridItem.classList.add("grid-item");
-
-                    const img = document.createElement("img");
-                    img.src = item.url;
-                    gridItem.appendChild(img);
-
-                    // Determine overlay text based on sorting option
-                    const overlayText = document.createElement("span");
-                    overlayText.classList.add("overlay-text");
-
-                    if (sortOption === "date" && item.created_at) {
-                        overlayText.textContent = `Date: ${new Date(
-                            item.created_at
-                        ).toLocaleDateString()}`;
-                    } else if (sortOption === "breed" && item.breeds[0]) {
-                        overlayText.textContent = `Breed: ${item.breeds[0].name}`;
-                    } else {
-                        overlayText.textContent = `ID: ${item.id}`;
-                    }
-
-                    gridItem.appendChild(overlayText);
-
-                    // Fetch a random cat fact for each image
-                    const factResponse = await fetch("https://catfact.ninja/fact");
-                    const factData = await factResponse.json();
-                    const catFact = factData.fact;
-
-                    // Add hover event to show the modal with cat fact, ID, date, and breed
-                    gridItem.addEventListener("mouseover", (event) => {
-                        showModal(catFact, item.id, item.created_at, item.breeds[0]?.name, item.url);
-                        showPopup(
-                            event,
-                            catFact,
-                            item.id,
-                            item.created_at,
-                            item.breeds[0]?.name
-                        );
-                    });
-
-                    gridItem.addEventListener("mousemove", (event) => {
-                        positionPopup(event);
-                    });
-
-                    gridItem.addEventListener("mouseout", () => {
-                        hidePopup();
-                    });
-
-                    grid.appendChild(gridItem);
+        async function fetchData() {
+            try {
+                const sortOption = document.getElementById("sort-options").value;
+                const response = await fetch(`https://api.thecatapi.com/v1/images/search?limit=100&order=${sortOption === "reverse-id" ? "desc" : "asc"}&include_breeds=true`, {
+                    headers: {
+                        "x-api-key": CAT_API_KEY,
+                    },
                 });
+                let data = await response.json();
+
+                if (sortOption === "id") {
+                    data.sort((a, b) => a.id - b.id);
+                } else if (sortOption === "reverse-id") {
+                    data.sort((a, b) => b.id - a.id);
+                } else if (sortOption === "date") {
+                    data.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+                } else if (sortOption === "breed") {
+                    data.sort((a, b) => {
+                        const breedA = a.breeds[0]?.name || "";
+                        const breedB = b.breeds[0]?.name || "";
+                        return breedA.localeCompare(breedB);
+                    });
+                }
+
+                renderGrid(data, sortOption);
+            } catch (error) {
+                console.error("Error fetching data:", error);
             }
+        }
 
-            // Show the modal with the given text, ID, upload date, breed, and image URL
-            function showModal(text, id, date, breed, imageUrl) {
-                const modalText = document.getElementById("modal-text");
-                const modalInfo = document.getElementById("modal-info");
-                const modal = document.getElementById("modal");
+        function renderGrid(data, sortOption) {
+            const grid = document.getElementById("grid");
+            grid.innerHTML = "";
 
-                modalText.textContent = text;
-                modalInfo.innerHTML = `ID: ${id} <br> Upload Date: ${
-                    date ? new Date(date).toLocaleDateString() : "N/A"
-                } <br> Breed: ${breed || "N/A"}`;
+            data.forEach(async (item) => {
+                const gridItem = document.createElement("div");
+                gridItem.classList.add("grid-item");
 
-                // Set the background image of the modal
-                modal.style.backgroundImage = `url(${imageUrl})`;
-            }
+                const img = document.createElement("img");
+                img.src = item.url;
+                gridItem.appendChild(img);
 
-            // Show the popup with the given text, ID, upload date, and breed
-            function showPopup(event, text, id, date, breed) {
-                const popup = document.getElementById("popup");
-                const popupText = document.getElementById("popup-text");
-                const popupInfo = document.getElementById("popup-info");
+                const overlayText = document.createElement("span");
+                overlayText.classList.add("overlay-text");
 
-                popupText.textContent = text;
-                popupInfo.innerHTML = `ID: ${id} <br> Upload Date: ${
-                    date ? new Date(date).toLocaleDateString() : "N/A"
-                } <br> Breed: ${breed || "N/A"}`;
+                if (sortOption === "date" && item.created_at) {
+                    overlayText.textContent = `Date: ${new Date(item.created_at).toLocaleDateString()}`;
+                } else if (sortOption === "breed" && item.breeds[0]) {
+                    overlayText.textContent = `Breed: ${item.breeds[0].name}`;
+                } else {
+                    overlayText.textContent = `ID: ${item.id}`;
+                }
 
-                popup.style.display = "block";
-                positionPopup(event);
-            }
+                gridItem.appendChild(overlayText);
 
-            // Position the popup next to the mouse
-            function positionPopup(event) {
-                const popup = document.getElementById("popup");
-                const offsetX = 10;
-                const offsetY = 10;
+                const factResponse = await fetch("https://catfact.ninja/fact");
+                const factData = await factResponse.json();
+                const catFact = factData.fact;
 
-                popup.style.left = `${event.pageX + offsetX}px`;
-                popup.style.top = `${event.pageY + offsetY}px`;
-            }
+                gridItem.addEventListener("mouseover", (event) => {
+                    showModal(catFact, item.id, item.created_at, item.breeds[0]?.name, item.url);
+                    showPopup(event, catFact, item.id, item.created_at, item.breeds[0]?.name);
+                });
 
-            // Hide the popup
-            function hidePopup() {
-                const popup = document.getElementById("popup");
-                popup.style.display = "none";
-            }
+                gridItem.addEventListener("mousemove", (event) => {
+                    positionPopup(event);
+                });
 
-            // Close modal
-            function closeModal() {
-                const modal = document.getElementById("modal");
-                modal.classList.remove("show");
-                document.getElementById("open-modal-button").style.display = "block";
-            }
+                gridItem.addEventListener("mouseout", () => {
+                    hidePopup();
+                });
 
-            // Open modal
-            function openModal() {
-                const modal = document.getElementById("modal");
-                modal.classList.add("show");
-                document.getElementById("open-modal-button").style.display = "none";
-            }
+                grid.appendChild(gridItem);
+            });
+        }
 
-            // Initial fetch and render of the data
-            fetchData();
-        </script>
-    </body>
+        function showModal(text, id, date, breed, imageUrl) {
+            const modalText = document.getElementById("modal-text");
+            const modalInfo = document.getElementById("modal-info");
+            const modal = document.getElementById("modal");
+
+            modalText.textContent = text;
+            modalInfo.innerHTML = `ID: ${id} <br> Upload Date: ${date ? new Date(date).toLocaleDateString() : "N/A"} <br> Breed: ${breed || "N/A"}`;
+            modal.style.backgroundImage = `url(${imageUrl})`;
+        }
+
+        function showPopup(event, text, id, date, breed) {
+            const popup = document.getElementById("popup");
+            const popupText = document.getElementById("popup-text");
+            const popupInfo = document.getElementById("popup-info");
+
+            popupText.textContent = text;
+            popupInfo.innerHTML = `ID: ${id} <br> Upload Date: ${date ? new Date(date).toLocaleDateString() : "N/A"} <br> Breed: ${breed || "N/A"}`;
+            popup.style.display = "block";
+            positionPopup(event);
+        }
+
+        function positionPopup(event) {
+            const popup = document.getElementById("popup");
+            const offsetX = 10;
+            const offsetY = 10;
+
+            popup.style.left = `${event.pageX + offsetX}px`;
+            popup.style.top = `${event.pageY + offsetY}px`;
+        }
+
+        function hidePopup() {
+            const popup = document.getElementById("popup");
+            popup.style.display = "none";
+        }
+
+        function closeModal() {
+            const modal = document.getElementById("modal");
+            modal.classList.remove("show");
+            document.getElementById("open-modal-button").style.display = "block";
+        }
+
+        function openModal() {
+            const modal = document.getElementById("modal");
+            modal.classList.add("show");
+            document.getElementById("open-modal-button").style.display = "none";
+        }
+
+        fetchData();
+
+        $(function () {
+            $("#modal").resizable();
+        });
+    </script>
+</body>
 </html>
