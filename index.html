@@ -12,6 +12,25 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
 
     <style>
+      .modal {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    background-color: #f9f9f9;
+    color: black;
+    padding: 40px;
+    transition: width 0.3s ease;
+    box-shadow: -4px 0 10px rgba(0, 0, 0, 0.2);
+    resize: both;
+    overflow: auto;
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    margin-right: 20px; /* Add this line */
+}
+
         .dark-mode .modal-content,
 .dark-mode .modal-content p,
 .dark-mode .modal-info,
