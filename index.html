@@ -73,9 +73,14 @@
             width: 100%;
             padding: 20px;
             text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
         }
 
-        .sort-container select {
+        .sort-container select,
+        .sort-container .close-button {
             padding: 8px 12px;
             font-size: 1rem;
             border-radius: 8px;
@@ -83,6 +88,12 @@
             outline: none;
             background-color: #fff;
             color: #1d1d1f;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .sort-container .close-button:hover {
+            background-color: #f0f0f0;
         }
 
         .grid-container {
@@ -103,6 +114,7 @@
             cursor: pointer;
             height: 120px;
             background-color: #fff;
+            transition: transform 0.3s ease;
         }
 
         .grid-item img {
@@ -114,6 +126,10 @@
         }
 
         .grid-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .grid-item:hover {
             transform: scale(1.05);
         }
 
@@ -187,7 +203,7 @@
 
         .close-button {
             align-self: flex-end;
-            font-size: 1.5rem;
+            font-size: 1rem;
             color: black;
             cursor: pointer;
             margin-bottom: 20px;
@@ -294,6 +310,7 @@
             <option value="reverse-id">ID (Descending)</option>
             <option value="breed">Breed</option>
         </select>
+        <button class="close-button" onclick="closeModal()">Close Modal</button>
     </div>
 
     <div class="container">
@@ -304,6 +321,7 @@
             <div class="modal-content">
                 <p id="modal-text">Hover over a cat image to see details</p>
                 <div id="modal-info" class="modal-info"></div>
+                <a id="modal-link" href="#" target="_blank" class="link-button">View API Path</a>
             </div>
         </div>
         <button id="open-modal-button" onclick="openModal()">Open Modal</button>
@@ -386,10 +404,12 @@
 
                 gridItem.addEventListener("mousemove", (event) => {
                     positionPopup(event);
+                    attractToMouse(event, gridItem);
                 });
 
                 gridItem.addEventListener("mouseout", () => {
                     hidePopup();
+                    resetPosition(gridItem);
                 });
 
                 grid.appendChild(gridItem);
@@ -399,10 +419,12 @@
         function showModal(text, id, date, breed, imageUrl) {
             const modalText = document.getElementById("modal-text");
             const modalInfo = document.getElementById("modal-info");
+            const modalLink = document.getElementById("modal-link");
             const modal = document.getElementById("modal");
 
             modalText.textContent = text;
             modalInfo.innerHTML = `ID: ${id} <br> Upload Date: ${date ? new Date(date).toLocaleDateString() : "N/A"} <br> Breed: ${breed || "N/A"}`;
+            modalLink.href = imageUrl;
             modal.style.backgroundImage = `url(${imageUrl})`;
         }
 
@@ -441,6 +463,27 @@
             const modal = document.getElementById("modal");
             modal.classList.add("show");
             document.getElementById("open-modal-button").style.display = "none";
+        }
+
+        function attractToMouse(event, element) {
+            const rect = element.getBoundingClientRect();
+            const elementX = rect.left + rect.width / 2;
+            const elementY = rect.top + rect.height / 2;
+            const mouseX = event.clientX;
+            const mouseY = event.clientY;
+            const distanceX = mouseX - elementX;
+            const distanceY = mouseY - elementY;
+            const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+
+            if (distance < 200) {
+                const moveX = (distanceX / distance) * 20;
+                const moveY = (distanceY / distance) * 20;
+                element.style.transform = `translate(${moveX}px, ${moveY}px)`;
+            }
+        }
+
+        function resetPosition(element) {
+            element.style.transform = "translate(0, 0)";
         }
 
         fetchData();
