@@ -119,6 +119,8 @@
                 resize: both; /* Allow resizing */
                 overflow: auto; /* Ensure content is scrollable */
                 position: relative; /* Add relative positioning */
+                background-size: cover; /* Ensure background image covers the modal */
+                background-position: center; /* Center the background image */
             }
 
             .modal.show {
@@ -126,7 +128,7 @@
             }
 
             .modal-content {
-                background-color: white;
+                background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
                 padding: 30px;
                 border-radius: 12px;
                 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -182,6 +184,7 @@
 
             /* Open Modal Button */
             #open-modal-button {
+                display: none; /* Initially hidden */
                 position: absolute;
                 bottom: 20px;
                 right: 20px;
@@ -264,9 +267,9 @@
                     <p id="modal-text">Hover over a cat image to see details</p>
                     <div id="modal-info" class="modal-info"></div>
                 </div>
-                <!-- Button to reopen modal -->
-                <button id="open-modal-button" onclick="openModal()">Open Modal</button>
             </div>
+            <!-- Button to reopen modal -->
+            <button id="open-modal-button" onclick="openModal()">Open Modal</button>
         </div>
 
         <!-- Popup -->
@@ -356,7 +359,7 @@
 
                     // Add hover event to show the modal with cat fact, ID, date, and breed
                     gridItem.addEventListener("mouseover", (event) => {
-                        showModal(catFact, item.id, item.created_at, item.breeds[0]?.name);
+                        showModal(catFact, item.id, item.created_at, item.breeds[0]?.name, item.url);
                         showPopup(
                             event,
                             catFact,
@@ -378,15 +381,19 @@
                 });
             }
 
-            // Show the modal with the given text, ID, upload date, and breed
-            function showModal(text, id, date, breed) {
+            // Show the modal with the given text, ID, upload date, breed, and image URL
+            function showModal(text, id, date, breed, imageUrl) {
                 const modalText = document.getElementById("modal-text");
                 const modalInfo = document.getElementById("modal-info");
+                const modal = document.getElementById("modal");
 
                 modalText.textContent = text;
                 modalInfo.innerHTML = `ID: ${id} <br> Upload Date: ${
                     date ? new Date(date).toLocaleDateString() : "N/A"
                 } <br> Breed: ${breed || "N/A"}`;
+
+                // Set the background image of the modal
+                modal.style.backgroundImage = `url(${imageUrl})`;
             }
 
             // Show the popup with the given text, ID, upload date, and breed
@@ -424,12 +431,14 @@
             function closeModal() {
                 const modal = document.getElementById("modal");
                 modal.classList.remove("show");
+                document.getElementById("open-modal-button").style.display = "block";
             }
 
             // Open modal
             function openModal() {
                 const modal = document.getElementById("modal");
                 modal.classList.add("show");
+                document.getElementById("open-modal-button").style.display = "none";
             }
 
             // Initial fetch and render of the data
