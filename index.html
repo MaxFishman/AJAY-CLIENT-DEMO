@@ -69,18 +69,7 @@
             color: #555;
         }
 
-        .sort-container {
-            width: 100%;
-            padding: 20px;
-            text-align: center;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .sort-container select,
-        .sort-container .close-button {
+        .menu-bar .dark-mode-toggle {
             padding: 8px 12px;
             font-size: 1rem;
             border-radius: 8px;
@@ -92,8 +81,30 @@
             transition: background-color 0.3s;
         }
 
-        .sort-container .close-button:hover {
+        .menu-bar .dark-mode-toggle:hover {
             background-color: #f0f0f0;
+        }
+
+        .sort-container {
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sort-container select {
+            padding: 8px 12px;
+            font-size: 1rem;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            outline: none;
+            background-color: #fff;
+            color: #1d1d1f;
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
 
         .grid-container {
@@ -201,19 +212,6 @@
             color: #555;
         }
 
-        .close-button {
-            align-self: flex-end;
-            font-size: 1rem;
-            color: black;
-            cursor: pointer;
-            margin-bottom: 20px;
-            transition: color 0.3s;
-        }
-
-        .close-button:hover {
-            color: #555;
-        }
-
         .popup {
             display: none;
             position: absolute;
@@ -249,6 +247,47 @@
 
         #open-modal-button:hover {
             background-color: #0056b3;
+        }
+
+        .dark-mode {
+            background-color: #1d1d1f;
+            color: #f5f5f7;
+        }
+
+        .dark-mode .menu-bar {
+            background-color: #1d1d1f;
+            color: #f5f5f7;
+        }
+
+        .dark-mode .menu-bar .menu-icon,
+        .dark-mode .menu-bar .logo,
+        .dark-mode .menu-bar .menu-options a {
+            color: #f5f5f7;
+        }
+
+        .dark-mode .sort-container select,
+        .dark-mode .menu-bar .dark-mode-toggle {
+            background-color: #333;
+            color: #f5f5f7;
+            border: 1px solid #555;
+        }
+
+        .dark-mode .grid-item {
+            background-color: #333;
+        }
+
+        .dark-mode .modal {
+            background-color: #333;
+            color: #f5f5f7;
+        }
+
+        .dark-mode .modal-content {
+            background-color: rgba(50, 50, 50, 0.8);
+        }
+
+        .dark-mode .popup {
+            background-color: #333;
+            color: #f5f5f7;
         }
 
         @media (max-width: 768px) {
@@ -300,6 +339,7 @@
             <a href="#">About</a>
             <a href="#">Contact</a>
         </div>
+        <button id="dark-mode-toggle" class="dark-mode-toggle" onclick="toggleDarkMode()">Dark Mode</button>
     </div>
 
     <div class="sort-container">
@@ -310,14 +350,12 @@
             <option value="reverse-id">ID (Descending)</option>
             <option value="breed">Breed</option>
         </select>
-        <button class="close-button" onclick="closeModal()">Close Modal</button>
     </div>
 
     <div class="container">
         <div id="grid" class="grid-container"></div>
 
         <div id="modal" class="modal show">
-            <span class="close-button" onclick="closeModal()">&times;</span>
             <div class="modal-content">
                 <p id="modal-text">Hover over a cat image to see details</p>
                 <div id="modal-info" class="modal-info"></div>
@@ -453,12 +491,6 @@
             popup.style.display = "none";
         }
 
-        function closeModal() {
-            const modal = document.getElementById("modal");
-            modal.classList.remove("show");
-            document.getElementById("open-modal-button").style.display = "block";
-        }
-
         function openModal() {
             const modal = document.getElementById("modal");
             modal.classList.add("show");
@@ -484,6 +516,12 @@
 
         function resetPosition(element) {
             element.style.transform = "translate(0, 0)";
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark-mode");
+            const darkModeButton = document.getElementById("dark-mode-toggle");
+            darkModeButton.textContent = document.body.classList.contains("dark-mode") ? "Light Mode" : "Dark Mode";
         }
 
         fetchData();
